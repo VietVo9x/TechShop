@@ -1,19 +1,24 @@
+import {
+  I_UserRegister,
+  I_UserRegisterFormError,
+  I_UserRegisterStatus,
+} from "../../types/registerType";
 import RegisterServices from "./RegisterServices";
 
 const registerServices = new RegisterServices();
 
 export class RegisterEvent {
-  onRegister(dataForm: any) {
-    // validator form --> status
-    const errorResponse = registerServices.validator(dataForm);
+  onRegister(dataForm: I_UserRegister) {
+    // validator form --> thông báo lỗi form
+    const errorResponse: I_UserRegisterFormError =
+      registerServices.validator(dataForm);
     if (errorResponse.isError) {
-      console.log(errorResponse);
       return errorResponse;
     }
     // --> đăng ký --> status, data, message
-    const registerResponse = registerServices.register(dataForm);
+    const registerResponse: I_UserRegisterStatus =
+      registerServices.register(dataForm);
 
-    if (registerResponse.status === "success") {
-    }
+    return registerResponse;
   }
 }

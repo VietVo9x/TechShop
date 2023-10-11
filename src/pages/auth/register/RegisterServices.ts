@@ -1,21 +1,26 @@
+import { I_UserEntity } from "../../types/entities";
+import {
+  I_UserRegister,
+  I_UserRegisterFormError,
+} from "../../types/registerType";
 import RegisterRepository from "./RegisterRepository";
 
 const registerRepository = new RegisterRepository();
 
 export default class RegisterServices {
-  register(dataForm: any) {
-    const entity_user: any = {
+  register(dataForm: I_UserRegister) {
+    const entity_user: I_UserEntity = {
       email: dataForm.email,
       password: dataForm.password,
-      firstName: dataForm.firstName,
-      lastName: dataForm.lastName,
+      name: dataForm.name,
       created_at: new Date().toISOString(),
       status: "active",
+      role: 1,
     };
 
     const users = registerRepository.getAllUser();
     const userExists = users.find(
-      (item: any) => item.email === entity_user.email
+      (item: I_UserRegister) => item.email === entity_user.email
     );
 
     if (!userExists) {
@@ -27,30 +32,19 @@ export default class RegisterServices {
           data: ret,
           message: "Đăng ký thành công",
         };
-        console.log(msgSuccess);
         return msgSuccess;
       }
-      const msgFail = {
-        status: "failure",
-        data: ret,
-        message: "Đăng ký thất bại",
-      };
-      console.log(msgFail);
-
-      return msgFail;
     }
 
-    const msgTrungLap = {
+    const msgFail = {
       status: "failure",
-      message:
-        "Email đã tồn tại, vui lòng đăng nhập hoặc đăng ký bằng một tài khoản khác",
+      message: "Đăng ký thất bại",
     };
-    console.log(msgTrungLap);
-    return msgTrungLap;
+    return msgFail;
   }
 
-  validator(user: any) {
-    const error = {
+  validator(user: I_UserRegister) {
+    const error: I_UserRegisterFormError = {
       isError: false,
       msgEmail: "",
       msgName: "",
